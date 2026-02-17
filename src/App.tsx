@@ -1,19 +1,17 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
+import { Scene } from "./components/Scene";
 
 export default function App() {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Canvas
         shadows
-        camera={{ position: [0, 15, 20], fov: 50 }}
+        camera={{ position: [0, 25, 35], fov: 50 }}
+        gl={{ antialias: true }}
       >
         <Suspense fallback={null}>
-          <ambientLight intensity={0.2} />
-          <mesh>
-            <boxGeometry />
-            <meshStandardMaterial color="cyan" />
-          </mesh>
+          <Scene />
         </Suspense>
       </Canvas>
     </div>

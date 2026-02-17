@@ -6,6 +6,7 @@ import { keyboardMap } from "./config/controls.ts";
 import { LoadingScreen } from "./components/ui/LoadingScreen.tsx";
 import { TeleportMenu } from "./components/ui/TeleportMenu.tsx";
 import { MobileControls } from "./components/ui/MobileControls.tsx";
+import { Minimap } from "./components/ui/Minimap.tsx";
 import { useMobileDetect } from "./hooks/useMobileDetect.ts";
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
       <LoadingScreen />
       <TeleportMenu onTeleport={() => {}} />
       {isMobile && <MobileControls onMove={() => {}} onEnd={() => {}} />}
+      <Minimap />
       <div style={{ width: "100vw", height: "100vh" }}>
         <Canvas
           shadows

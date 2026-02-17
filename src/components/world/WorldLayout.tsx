@@ -2,6 +2,8 @@ import { Platform } from "./Platform.tsx";
 import { Bridge } from "./Bridge.tsx";
 import { LandingPad } from "../platforms/LandingPad.tsx";
 import { HoloGallery } from "../platforms/HoloGallery.tsx";
+import { TechLab } from "../platforms/TechLab.tsx";
+import { CommsTower } from "../platforms/CommsTower.tsx";
 import {
   PLATFORM_POSITIONS,
   BRIDGE_CONNECTIONS,
@@ -42,6 +44,8 @@ export function WorldLayout() {
 
       <LandingPad />
       <HoloGallery />
+      <TechLab />
+      <CommsTower />
     </>
   );
 }

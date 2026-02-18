@@ -8,13 +8,24 @@ interface HoloPanelProps {
   readonly width?: number;
 }
 
-export function HoloPanel({ position, children, color = "#00f0ff", width = 200 }: HoloPanelProps) {
+export function HoloPanel({
+  position,
+  children,
+  color = "#00f0ff",
+  width = 200,
+}: HoloPanelProps) {
   return (
     <Float speed={2} floatIntensity={0.3} rotationIntensity={0.1}>
       <group position={position}>
         <mesh>
           <planeGeometry args={[width / 80, width / 120]} />
-          <meshBasicMaterial color={color} transparent opacity={0.05} side={THREE.DoubleSide} toneMapped={false} />
+          <meshBasicMaterial
+            color={color}
+            transparent
+            opacity={0.05}
+            side={THREE.DoubleSide}
+            toneMapped={false}
+          />
         </mesh>
         <Html
           transform
@@ -30,7 +41,7 @@ export function HoloPanel({ position, children, color = "#00f0ff", width = 200 }
             fontSize: "13px",
             backdropFilter: "blur(10px)",
             boxShadow: `0 0 20px ${color}20`,
-            pointerEvents: "auto",
+            pointerEvents: "none",
           }}
         >
           {children}

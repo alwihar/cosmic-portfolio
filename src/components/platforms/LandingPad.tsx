@@ -1,18 +1,86 @@
 import { Text3D, Center, Float } from "@react-three/drei";
-import { HoloPanel } from "../shared/HoloPanel";
+import { useFrame } from "@react-three/fiber";
+import { useRef } from "react";
+import * as THREE from "three";
 import { profile } from "../../data/profile";
 import { PLATFORM_POSITIONS } from "../../utils/positions";
 
 export function LandingPad() {
   const pos = PLATFORM_POSITIONS.landing;
+  const radarRef = useRef<THREE.Group>(null);
+
+  useFrame(({ clock }) => {
+    if (radarRef.current) {
+      radarRef.current.rotation.y = clock.getElapsedTime() * 0.3;
+    }
+  });
 
   return (
     <group position={[pos.x, pos.y + 0.5, pos.z]}>
+      {/* Rotating holographic radar compass */}
+      <group ref={radarRef} position={[0, 6.5, 0]}>
+        {/* Outer ring */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[2, 0.03, 8, 32]} />
+          <meshBasicMaterial
+            color="#00f0ff"
+            toneMapped={false}
+            transparent
+            opacity={0.6}
+          />
+        </mesh>
+        {/* Inner ring */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[1.2, 0.02, 8, 32]} />
+          <meshBasicMaterial
+            color="#00f0ff"
+            toneMapped={false}
+            transparent
+            opacity={0.3}
+          />
+        </mesh>
+        {/* Compass crosshairs */}
+        {[0, Math.PI / 2, Math.PI / 4, -Math.PI / 4].map((angle, i) => (
+          <mesh key={i} rotation={[Math.PI / 2, 0, angle]}>
+            <planeGeometry args={[4, 0.02]} />
+            <meshBasicMaterial
+              color="#00f0ff"
+              toneMapped={false}
+              transparent
+              opacity={i < 2 ? 0.35 : 0.12}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+        ))}
+        {/* Sweep arm (brighter) */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[2, 0.05]} />
+          <meshBasicMaterial
+            color="#00f0ff"
+            toneMapped={false}
+            transparent
+            opacity={0.8}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+        {/* Center beacon */}
+        <mesh>
+          <sphereGeometry args={[0.12, 8, 8]} />
+          <meshBasicMaterial color="#00f0ff" toneMapped={false} />
+        </mesh>
+        <pointLight
+          color="#00f0ff"
+          intensity={1}
+          distance={8}
+        />
+      </group>
+
+      {/* Name */}
       <Float speed={1.5} floatIntensity={0.5}>
         <Center position={[0, 4, 0]}>
           <Text3D
             font="/fonts/helvetiker_bold.typeface.json"
-            size={1.2}
+            size={1.5}
             height={0.3}
             bevelEnabled
             bevelThickness={0.02}
@@ -24,11 +92,12 @@ export function LandingPad() {
         </Center>
       </Float>
 
+      {/* Title */}
       <Float speed={1.5} floatIntensity={0.3}>
         <Center position={[0, 2.5, 0]}>
           <Text3D
             font="/fonts/helvetiker_regular.typeface.json"
-            size={0.4}
+            size={0.45}
             height={0.1}
           >
             {profile.title}
@@ -37,23 +106,19 @@ export function LandingPad() {
         </Center>
       </Float>
 
-      <HoloPanel position={[-4, 2, 2]} color="#00f0ff" width={220}>
-        <div>
-          <h3 style={{ color: "#00f0ff", margin: "0 0 8px 0", fontSize: "14px" }}>// ABOUT</h3>
-          <p style={{ margin: 0, lineHeight: 1.5 }}>{profile.bio}</p>
-        </div>
-      </HoloPanel>
-
-      <HoloPanel position={[4, 2, 2]} color="#ff00ff" width={220}>
-        <div>
-          <h3 style={{ color: "#ff00ff", margin: "0 0 8px 0", fontSize: "14px" }}>// HIGHLIGHTS</h3>
-          <ul style={{ margin: 0, paddingLeft: "16px", lineHeight: 1.8 }}>
-            {profile.highlights.map((h) => (
-              <li key={h}>{h}</li>
-            ))}
-          </ul>
-        </div>
-      </HoloPanel>
+      {/* Subtitle */}
+      <Float speed={1} floatIntensity={0.2}>
+        <Center position={[0, 1.5, 0]}>
+          <Text3D
+            font="/fonts/helvetiker_regular.typeface.json"
+            size={0.2}
+            height={0.05}
+          >
+            {"Explore the station to learn more"}
+            <meshBasicMaterial color="#6060a0" toneMapped={false} />
+          </Text3D>
+        </Center>
+      </Float>
     </group>
   );
 }

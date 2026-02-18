@@ -9,9 +9,10 @@ import type { QualitySettings } from "../config/quality.ts";
 
 interface SceneProps {
   readonly quality: QualitySettings;
+  readonly characterVariant?: string;
 }
 
-export function Scene({ quality }: SceneProps) {
+export function Scene({ quality, characterVariant }: SceneProps) {
   return (
     <>
       <SpaceBackground />
@@ -21,10 +22,10 @@ export function Scene({ quality }: SceneProps) {
         bloomEnabled={quality.bloomEnabled}
         chromaticAberration={quality.chromaticAberration}
       />
-      <fog attach="fog" args={["#000010", 30, 120]} />
+      <fog attach="fog" args={["#000010", 50, 180]} />
       <Physics gravity={[0, -9.81, 0]}>
         <WorldLayout />
-        <CharacterController />
+        <CharacterController variant={characterVariant} />
       </Physics>
     </>
   );

@@ -18,6 +18,7 @@ export function TeleportMenu() {
   function handleTeleport(key: keyof typeof PLATFORM_POSITIONS) {
     const pos = PLATFORM_POSITIONS[key];
     dispatchTeleport([pos.x, pos.y + 3, pos.z + 3]);
+    document.dispatchEvent(new CustomEvent("teleport-glitch"));
     setIsOpen(false);
     (document.activeElement as HTMLElement)?.blur();
   }

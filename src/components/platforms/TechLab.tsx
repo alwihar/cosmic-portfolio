@@ -119,18 +119,21 @@ function SkillCard({
 export function TechLab() {
   const pos = PLATFORM_POSITIONS.skills;
   const innerRadius = 3.5;
-  const outerRadius = 5.5;
+  const middleRadius = 5.5;
+  const outerRadius = 7.5;
 
   return (
     <group position={[pos.x, pos.y + 0.5, pos.z]}>
       {/* Skills placed on the platform (no Float) */}
       {skills.map((skill, i) => {
-        const isInner = i < 5;
-        const radius = isInner ? innerRadius : outerRadius;
-        const count = isInner ? 5 : skills.length - 5;
-        const index = isInner ? i : i - 5;
+        const ring = i < 5 ? 0 : i < 12 ? 1 : 2;
+        const radius =
+          ring === 0 ? innerRadius : ring === 1 ? middleRadius : outerRadius;
+        const start = ring === 0 ? 0 : ring === 1 ? 5 : 12;
+        const count = ring === 0 ? 5 : ring === 1 ? 7 : skills.length - 12;
+        const index = i - start;
         const angle =
-          (index / count) * Math.PI * 2 + (isInner ? 0 : Math.PI / count);
+          (index / count) * Math.PI * 2 + (ring === 0 ? 0 : Math.PI / count);
         const x = Math.cos(angle) * radius;
         const z = Math.sin(angle) * radius;
 

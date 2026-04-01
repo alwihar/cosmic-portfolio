@@ -37,10 +37,16 @@ export function Observatory() {
       <group ref={telescopeRef} position={[0, 2, 0]}>
         <mesh>
           <cylinderGeometry args={[0.12, 0.2, 2.5, 8]} />
-          <meshStandardMaterial color="#1a1a3e" metalness={0.9} roughness={0.1} />
+          <meshStandardMaterial
+            color="#1a1a3e"
+            metalness={0.9}
+            roughness={0.1}
+          />
         </mesh>
         <mesh position={[0, 1.3, 0]}>
-          <sphereGeometry args={[0.2, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <sphereGeometry
+            args={[0.2, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2]}
+          />
           <meshStandardMaterial
             color="#00aaff"
             emissive="#0066ff"
@@ -55,7 +61,12 @@ export function Observatory() {
       {/* Rotating ring */}
       <mesh ref={ringRef} position={[0, 2, 0]}>
         <torusGeometry args={[1.5, 0.03, 8, 32]} />
-        <meshBasicMaterial color="#4488ff" toneMapped={false} transparent opacity={0.6} />
+        <meshBasicMaterial
+          color="#4488ff"
+          toneMapped={false}
+          transparent
+          opacity={0.6}
+        />
       </mesh>
 
       {/* Base pedestal */}
@@ -70,14 +81,47 @@ export function Observatory() {
         />
       </mesh>
 
+      {/* Subtle hint for secret passage */}
+      <mesh position={[-4.5, 0.5, 0]}>
+        <boxGeometry args={[0.1, 1, 0.8]} />
+        <meshBasicMaterial
+          color="#4400ff"
+          toneMapped={false}
+          transparent
+          opacity={0.15}
+        />
+      </mesh>
+      <pointLight
+        position={[-4.8, 0.5, 0]}
+        color="#4400ff"
+        intensity={0.3}
+        distance={3}
+      />
+
       {/* Floating star markers */}
       {Array.from({ length: 6 }).map((_, i) => {
         const angle = (i / 6) * Math.PI * 2;
         return (
-          <Float key={i} speed={1 + i * 0.3} floatIntensity={0.5} floatingRange={[-0.2, 0.2]}>
-            <mesh position={[Math.cos(angle) * 3, 3 + Math.sin(angle * 2), Math.sin(angle) * 3]}>
+          <Float
+            key={i}
+            speed={1 + i * 0.3}
+            floatIntensity={0.5}
+            floatingRange={[-0.2, 0.2]}
+          >
+            <mesh
+              position={[
+                Math.cos(angle) * 3,
+                3 + Math.sin(angle * 2),
+                Math.sin(angle) * 3,
+              ]}
+            >
               <octahedronGeometry args={[0.08, 0]} />
-              <meshBasicMaterial color="#4488ff" toneMapped={false} transparent opacity={0.8} />
+              <meshBasicMaterial
+                color="#4488ff"
+                toneMapped={false}
+                transparent
+                opacity={0.8}
+              />
             </mesh>
           </Float>
         );

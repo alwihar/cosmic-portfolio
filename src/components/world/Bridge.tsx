@@ -2,11 +2,19 @@ import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import {
+  energyBridgeVertex,
+  energyBridgeFragment,
+} from "../../shaders/energyBridge";
 
 const WALL_HEIGHT = 3;
 const WALL_THICKNESS = 0.5;
 const SURFACE_Y_OFFSET = 0.175;
-const WALL_MARGIN = 1;
+const WALL_MARGIN = -0.5;
+/** Extra length added to bridge collider on each end to prevent fall-through gaps */
+const COLLIDER_OVERLAP = 2.0;
+/** Reduce visual trim so bridge surface extends slightly into the platform */
+const VISUAL_OVERLAP = 0.6;
 
 interface BridgeProps {
   readonly from: THREE.Vector3;
@@ -148,10 +156,27 @@ export function Bridge({
 }: BridgeProps) {
   const pulseRef = useRef<THREE.Mesh>(null);
 
+  const bridgeMaterial = useMemo(
+    () =>
+      new THREE.ShaderMaterial({
+        vertexShader: energyBridgeVertex,
+        fragmentShader: energyBridgeFragment,
+        uniforms: {
+          uColor: { value: new THREE.Color(color) },
+          uTime: { value: 0 },
+          uIntensity: { value: 0.8 },
+        },
+        transparent: true,
+        depthWrite: false,
+      }),
+    [color],
+  );
+
   const {
     position,
     rotation,
     length,
+    colliderLength,
     wallLength,
     wallOffsetZ,
     visualLength,
@@ -169,8 +194,12 @@ export function Bridge({
     const edgeFrom = computeEdgeDist(from, to, fromSize);
     const edgeTo = computeEdgeDist(to, from, toSize);
 
-    // Decorative visuals trimmed to platform edges
-    const vLen = Math.max(0, bridgeLength - edgeFrom - edgeTo);
+    // Decorative visuals trimmed to platform edges, with overlap to prevent
+    // visible gaps at bridge-platform junctions
+    const vLen = Math.max(
+      0,
+      bridgeLength - (edgeFrom - VISUAL_OVERLAP) - (edgeTo - VISUAL_OVERLAP),
+    );
     const vOffset = (edgeFrom - edgeTo) / 2;
 
     // Wall trimming (extra margin so walls don't block platform movement)
@@ -179,10 +208,15 @@ export function Bridge({
     const wLen = Math.max(0, bridgeLength - trimFrom - trimTo);
     const wOffset = (trimFrom - trimTo) / 2;
 
+    // Floor collider extends beyond center-to-center span to overlap
+    // with platform colliders, preventing fall-through at seams
+    const colliderLen = bridgeLength + COLLIDER_OVERLAP * 2;
+
     return {
       position: midpoint,
       rotation: [0, angle, 0] as const,
       length: bridgeLength,
+      colliderLength: colliderLen,
       wallLength: wLen,
       wallOffsetZ: wOffset,
       visualLength: vLen,
@@ -191,6 +225,7 @@ export function Bridge({
   }, [from, to, fromSize, toSize]);
 
   useFrame(({ clock }) => {
+    bridgeMaterial.uniforms.uTime.value = clock.getElapsedTime();
     if (pulseRef.current) {
       const mat = pulseRef.current.material as THREE.MeshBasicMaterial;
       mat.opacity = 0.2 + Math.sin(clock.getElapsedTime() * 2) * 0.15;
@@ -205,15 +240,8 @@ export function Bridge({
       colliders={false}
     >
       {/* Main dark surface, lowered slightly to sit under platforms */}
-      <mesh position={[0, -0.04, 0]} receiveShadow>
+      <mesh position={[0, -0.04, 0]} receiveShadow material={bridgeMaterial}>
         <boxGeometry args={[width, 0.15, length]} />
-        <meshStandardMaterial
-          color="#050510"
-          emissive={color}
-          emissiveIntensity={0.15}
-          metalness={0.9}
-          roughness={0.2}
-        />
       </mesh>
 
       {/* Decorative elements — trimmed to only show between platforms */}
@@ -252,8 +280,8 @@ export function Bridge({
         <CrossMarkers width={width} length={visualLength} color={color} />
       </group>
 
-      {/* Full-length floor collider at original height */}
-      <CuboidCollider args={[width / 2, 0.075, length / 2]} />
+      {/* Floor collider extends past platform edges to prevent fall-through */}
+      <CuboidCollider args={[width / 2, 0.075, colliderLength / 2]} />
 
       {/* Side wall colliders */}
       {wallLength > 0 && (
@@ -268,6 +296,26 @@ export function Bridge({
           />
         </>
       )}
+
+      {/* Corner blockers at each bridge-platform junction.
+          These are wider colliders at each end to seal the diagonal gaps
+          between the rotated bridge walls and axis-aligned platform walls. */}
+      <CuboidCollider
+        position={[-width / 2, WALL_HEIGHT / 2, -length / 2]}
+        args={[WALL_THICKNESS, WALL_HEIGHT / 2, WALL_THICKNESS]}
+      />
+      <CuboidCollider
+        position={[width / 2, WALL_HEIGHT / 2, -length / 2]}
+        args={[WALL_THICKNESS, WALL_HEIGHT / 2, WALL_THICKNESS]}
+      />
+      <CuboidCollider
+        position={[-width / 2, WALL_HEIGHT / 2, length / 2]}
+        args={[WALL_THICKNESS, WALL_HEIGHT / 2, WALL_THICKNESS]}
+      />
+      <CuboidCollider
+        position={[width / 2, WALL_HEIGHT / 2, length / 2]}
+        args={[WALL_THICKNESS, WALL_HEIGHT / 2, WALL_THICKNESS]}
+      />
     </RigidBody>
   );
 }

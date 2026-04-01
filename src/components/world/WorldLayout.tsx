@@ -9,11 +9,15 @@ import { ExperiencePlatform } from "../platforms/ExperiencePlatform.tsx";
 import { CommsTower } from "../platforms/CommsTower.tsx";
 import { Observatory } from "../platforms/Observatory.tsx";
 import { HoloLabel } from "../ui/HoloLabel.tsx";
+import { SecretRoom } from "./SecretRoom";
+import { Collectibles } from "./Collectibles";
+import { PlatformForceField } from "../effects/PlatformForceField";
 import {
   PLATFORM_POSITIONS,
   BRIDGE_CONNECTIONS,
   type PlatformKey,
 } from "../../utils/positions.ts";
+import { useGameStore } from "../../store/gameStore";
 
 const PLATFORM_CONFIG: Record<
   string,
@@ -106,7 +110,7 @@ function splitEdge(
   gaps: readonly number[],
   halfExtent: number,
 ): Array<{ start: number; end: number }> {
-  const GAP_HALF = 2.0;
+  const GAP_HALF = 1.5;
   if (gaps.length === 0) {
     return [{ start: -halfExtent, end: halfExtent }];
   }
@@ -126,6 +130,13 @@ function splitEdge(
   }
   return result;
 }
+
+// Extra wall gaps not covered by bridge connections (e.g. secret passages)
+const EXTRA_WALL_GAPS: Partial<
+  Record<PlatformKey, Partial<Record<Edge, number[]>>>
+> = {
+  observatory: { left: [0] }, // gap at center of left wall for secret passage
+};
 
 function generateAllWalls(): readonly WallSegment[] {
   const WALL_H = 3;
@@ -166,6 +177,16 @@ function generateAllWalls(): readonly WallSegment[] {
         gapPos = t * dx;
       }
       gapsByEdge[edge].push(gapPos);
+    }
+
+    // Inject extra gaps for secret passages
+    const extraGaps = EXTRA_WALL_GAPS[key as PlatformKey];
+    if (extraGaps) {
+      for (const [edge, positions] of Object.entries(extraGaps) as Array<
+        [Edge, number[]]
+      >) {
+        gapsByEdge[edge].push(...positions);
+      }
     }
 
     // Left edge — wall runs along z
@@ -213,19 +234,31 @@ export function WorldLayout() {
         <CuboidCollider args={[100, 0.25, 100]} />
       </RigidBody>
 
-      {/* Platform edge barriers (invisible, with gaps for bridges) */}
-      {WALL_SEGMENTS.map((wall, i) => (
-        <RigidBody
-          key={`wall-${i}`}
-          type="fixed"
-          position={wall.position}
-          colliders={false}
-        >
-          <CuboidCollider
-            args={[wall.size[0] / 2, wall.size[1] / 2, wall.size[2] / 2]}
-          />
-        </RigidBody>
-      ))}
+      {/* Platform edge barriers (with hex force field visuals) */}
+      {WALL_SEGMENTS.map((wall, i) => {
+        const runsAlongX = wall.size[0] > wall.size[2];
+        const length = runsAlongX ? wall.size[0] : wall.size[2];
+        const height = wall.size[1];
+        const rotation: [number, number, number] = runsAlongX
+          ? [0, 0, 0]
+          : [0, Math.PI / 2, 0];
+
+        return (
+          <group key={`wall-${i}`}>
+            <RigidBody type="fixed" position={wall.position} colliders={false}>
+              <CuboidCollider
+                args={[wall.size[0] / 2, wall.size[1] / 2, wall.size[2] / 2]}
+              />
+            </RigidBody>
+            <PlatformForceField
+              position={wall.position}
+              size={[length, height]}
+              rotation={rotation}
+              color="#00f0ff"
+            />
+          </group>
+        );
+      })}
 
       {/* Platforms */}
       {Object.entries(PLATFORM_CONFIG).map(([key, config]) => (
@@ -250,6 +283,32 @@ export function WorldLayout() {
         />
       ))}
 
+      {/* Platform visit sensors */}
+      {Object.keys(PLATFORM_CONFIG).map((key) => {
+        const pos = PLATFORM_POSITIONS[key as PlatformKey];
+        const config = PLATFORM_CONFIG[key];
+        return (
+          <RigidBody
+            key={`sensor-${key}`}
+            type="fixed"
+            position={[pos.x, pos.y + 1, pos.z]}
+            sensor
+          >
+            <CuboidCollider
+              args={[config.size[0] / 2, 2, config.size[2] / 2]}
+              onIntersectionEnter={() => {
+                const store = useGameStore.getState();
+                store.visitPlatform(key);
+                if (store.visitedPlatforms.size === 1)
+                  store.unlockAchievement("first-steps");
+                if (store.visitedPlatforms.size >= 7)
+                  store.unlockAchievement("explorer");
+              }}
+            />
+          </RigidBody>
+        );
+      })}
+
       {/* Platform content */}
       <LandingPad />
       <AboutPlatform />
@@ -258,6 +317,22 @@ export function WorldLayout() {
       <ExperiencePlatform />
       <CommsTower />
       <Observatory />
+      <SecretRoom />
+
+      {/* Secret passage to hidden room */}
+      <RigidBody type="fixed">
+        <mesh position={[-47.5, -0.25, -10]}>
+          <boxGeometry args={[15, 0.15, 3]} />
+          <meshStandardMaterial
+            color="#050510"
+            emissive="#4400ff"
+            emissiveIntensity={0.05}
+          />
+        </mesh>
+      </RigidBody>
+
+      {/* Collectibles */}
+      <Collectibles />
 
       {/* Labels */}
       {Object.entries(PLATFORM_CONFIG).map(([key, config]) => {

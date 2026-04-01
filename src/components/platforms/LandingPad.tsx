@@ -1,9 +1,10 @@
-import { Text3D, Center, Float } from "@react-three/drei";
+import { Text3D, Center, Float, Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
 import { profile } from "../../data/profile";
 import { PLATFORM_POSITIONS } from "../../utils/positions";
+import { openPlatformDetail } from "../../utils/platformDetail";
 
 export function LandingPad() {
   const pos = PLATFORM_POSITIONS.landing;
@@ -68,11 +69,7 @@ export function LandingPad() {
           <sphereGeometry args={[0.12, 8, 8]} />
           <meshBasicMaterial color="#00f0ff" toneMapped={false} />
         </mesh>
-        <pointLight
-          color="#00f0ff"
-          intensity={1}
-          distance={8}
-        />
+        <pointLight color="#00f0ff" intensity={1} distance={8} />
       </group>
 
       {/* Name */}
@@ -119,6 +116,33 @@ export function LandingPad() {
           </Text3D>
         </Center>
       </Float>
+
+      {/* Interactive Terminal */}
+      <Html transform position={[4, 2, -3]} distanceFactor={8}>
+        <div
+          style={{
+            width: "120px",
+            padding: "10px 12px",
+            background: "rgba(0,0,0,0.85)",
+            border: "1px solid rgba(0,255,136,0.2)",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontFamily: "'Courier New', monospace",
+          }}
+          onClick={() => openPlatformDetail("terminal")}
+        >
+          <div
+            style={{ color: "#00ff88", fontSize: "10px", fontWeight: "bold" }}
+          >
+            {"// TERMINAL"}
+          </div>
+          <div style={{ color: "#808090", fontSize: "9px", marginTop: "4px" }}>
+            {">"} type 'help'
+            <br />
+            {">"} _
+          </div>
+        </div>
+      </Html>
     </group>
   );
 }

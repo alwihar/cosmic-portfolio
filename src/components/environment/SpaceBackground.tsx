@@ -107,13 +107,26 @@ export function SpaceBackground() {
   const starsRef = useRef<THREE.Points>(null);
   const starsRef2 = useRef<THREE.Points>(null);
 
-  useFrame((_, delta) => {
+  useFrame(({ camera }, delta) => {
     if (starsRef.current) {
       starsRef.current.rotation.y += delta * 0.003;
     }
     if (starsRef2.current) {
       starsRef2.current.rotation.y -= delta * 0.001;
       starsRef2.current.rotation.x += delta * 0.001;
+    }
+
+    // Parallax based on camera position
+    const camX = camera.position.x;
+    const camZ = camera.position.z;
+
+    if (starsRef.current) {
+      starsRef.current.position.x = -camX * 0.005;
+      starsRef.current.position.z = -camZ * 0.005;
+    }
+    if (starsRef2.current) {
+      starsRef2.current.position.x = -camX * 0.02;
+      starsRef2.current.position.z = -camZ * 0.02;
     }
   });
 
@@ -142,11 +155,36 @@ export function SpaceBackground() {
         speed={0.1}
       />
       {/* Nebula clouds */}
-      <NebulaCloud position={[-80, 30, -120]} color="#2200aa" size={60} opacity={0.06} />
-      <NebulaCloud position={[100, -20, -150]} color="#aa0066" size={50} opacity={0.05} />
-      <NebulaCloud position={[-40, 60, -80]} color="#0044aa" size={45} opacity={0.04} />
-      <NebulaCloud position={[60, -40, -200]} color="#440088" size={70} opacity={0.05} />
-      <NebulaCloud position={[0, 50, -250]} color="#003366" size={80} opacity={0.03} />
+      <NebulaCloud
+        position={[-80, 30, -120]}
+        color="#2200aa"
+        size={60}
+        opacity={0.06}
+      />
+      <NebulaCloud
+        position={[100, -20, -150]}
+        color="#aa0066"
+        size={50}
+        opacity={0.05}
+      />
+      <NebulaCloud
+        position={[-40, 60, -80]}
+        color="#0044aa"
+        size={45}
+        opacity={0.04}
+      />
+      <NebulaCloud
+        position={[60, -40, -200]}
+        color="#440088"
+        size={70}
+        opacity={0.05}
+      />
+      <NebulaCloud
+        position={[0, 50, -250]}
+        color="#003366"
+        size={80}
+        opacity={0.03}
+      />
       {/* Cosmic dust particles */}
       <CosmicDust count={400} />
     </>

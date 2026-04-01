@@ -29,3 +29,14 @@ html, body, #root {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
 }
+
+@keyframes toastSlide {
+  from {
+    transform: translateX(-50%) translateY(-60px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}

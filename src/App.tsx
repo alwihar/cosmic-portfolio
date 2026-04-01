@@ -17,6 +17,9 @@ import { MobileControls } from "./components/ui/MobileControls.tsx";
 import { Minimap } from "./components/ui/Minimap.tsx";
 import { DetailOverlay } from "./components/ui/DetailOverlay.tsx";
 import { AudioToggle } from "./components/ui/AudioToggle.tsx";
+import { AchievementToast } from "./components/ui/AchievementToast";
+import { ProgressHUD } from "./components/ui/ProgressHUD";
+import { useGameStore } from "./store/gameStore";
 import { useMobileDetect } from "./hooks/useMobileDetect.ts";
 import { useDevicePerformance } from "./hooks/useDevicePerformance.ts";
 import type { CharacterVariant } from "./config/characters.ts";
@@ -25,6 +28,7 @@ import {
   type PlatformId,
 } from "./utils/platformDetail.ts";
 import { startMusic } from "./audio/audioManager.ts";
+import { setSfxEnabled } from "./audio/sfxManager.ts";
 
 export default function App() {
   const isMobile = useMobileDetect();
@@ -33,12 +37,55 @@ export default function App() {
     useState<CharacterVariant | null>(null);
   const [entered, setEntered] = useState(false);
   const [openPlatform, setOpenPlatform] = useState<PlatformId | null>(null);
+  const [konamiTriggered, setKonamiTriggered] = useState(false);
+
+  useEffect(() => {
+    const KONAMI = [
+      "ArrowUp",
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowLeft",
+      "ArrowRight",
+      "b",
+      "a",
+    ];
+    let index = 0;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === KONAMI[index]) {
+        index++;
+        if (index === KONAMI.length) {
+          index = 0;
+          useGameStore.getState().unlockAchievement("konami-master");
+          setKonamiTriggered(true);
+          setTimeout(() => setKonamiTriggered(false), 2000);
+        }
+      } else {
+        index = e.key === KONAMI[0] ? 1 : 0;
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
 
   useEffect(() => {
     return subscribePlatformDetail(
       (platform) => setOpenPlatform(platform),
       () => setOpenPlatform(null),
     );
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const elapsed =
+        (Date.now() - useGameStore.getState().sessionStart) / 1000;
+      if (elapsed >= 300) {
+        useGameStore.getState().unlockAchievement("veteran");
+      }
+    }, 10000);
+    return () => clearInterval(timer);
   }, []);
 
   const handleOverlayClick = useCallback(() => {
@@ -49,6 +96,8 @@ export default function App() {
     setEntered(true);
     if (withMusic) {
       startMusic();
+    } else {
+      setSfxEnabled(false);
     }
   }, []);
 
@@ -98,6 +147,8 @@ export default function App() {
         <ControlsGuide />
         {isMobile && <MobileControls onMove={() => {}} onEnd={() => {}} />}
         <Minimap />
+        <AchievementToast />
+        <ProgressHUD />
       </div>
       {openPlatform && <DetailOverlay platform={openPlatform} />}
       <div
@@ -118,7 +169,11 @@ export default function App() {
           <AdaptiveEvents />
           <Preload all />
           <Suspense fallback={null}>
-            <Scene quality={quality} characterVariant={characterVariant} />
+            <Scene
+              quality={quality}
+              characterVariant={characterVariant}
+              glitchActive={konamiTriggered}
+            />
           </Suspense>
         </Canvas>
       </div>

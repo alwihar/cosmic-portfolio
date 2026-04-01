@@ -8,9 +8,17 @@ export const profile = {
     "Full-stack capable — React, Node.js, AWS, Docker, Pulumi",
     "Consistently improved performance metrics by 30%+",
   ],
+  education: {
+    degree: "Master of Marketing and Business",
+    university: "Universit\u00e9 Jean Moulin (Lyon III)",
+    period: "2013 — 2019",
+  },
+  languages: ["English", "Russian", "French", "Armenian"],
   social: {
     github: "https://github.com/alwihar",
     linkedin: "https://www.linkedin.com/in/alwina-harutyunyan/",
     email: "alwinaharutyunyan@gmail.com",
+    phone: "+37455400444",
+    website: "https://alwi.me",
   },
 } as const;

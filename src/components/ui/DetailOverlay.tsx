@@ -5,6 +5,8 @@ import { skills } from "../../data/skills.ts";
 import { projects } from "../../data/projects.ts";
 import { experience } from "../../data/experience.ts";
 import { profile } from "../../data/profile.ts";
+import { InteractiveTerminal } from "./InteractiveTerminal.tsx";
+import { AchievementGallery } from "./AchievementGallery.tsx";
 
 const OVERLAY_STYLE: React.CSSProperties = {
   position: "fixed",
@@ -425,15 +427,103 @@ function AboutPanel() {
         ))}
       </div>
 
+      {/* Education & Languages */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "10px",
+          marginBottom: "24px",
+        }}
+      >
+        <div
+          style={{
+            background: "rgba(255,255,255,0.02)",
+            border: "1px solid rgba(0,240,255,0.12)",
+            borderRadius: "8px",
+            padding: "14px",
+            borderLeft: "3px solid #00f0ff",
+          }}
+        >
+          <div
+            style={{
+              color: "#00f0ff",
+              fontSize: "10px",
+              marginBottom: "6px",
+              opacity: 0.5,
+              letterSpacing: "1px",
+            }}
+          >
+            EDUCATION
+          </div>
+          <div style={{ fontSize: "12px", lineHeight: 1.6 }}>
+            {profile.education.degree}
+          </div>
+          <div style={{ fontSize: "11px", opacity: 0.6, marginTop: "2px" }}>
+            {profile.education.university}
+          </div>
+          <div style={{ fontSize: "10px", opacity: 0.4, marginTop: "2px" }}>
+            {profile.education.period}
+          </div>
+        </div>
+        <div
+          style={{
+            background: "rgba(255,255,255,0.02)",
+            border: "1px solid rgba(255,0,255,0.12)",
+            borderRadius: "8px",
+            padding: "14px",
+            borderLeft: "3px solid #ff00ff",
+          }}
+        >
+          <div
+            style={{
+              color: "#ff00ff",
+              fontSize: "10px",
+              marginBottom: "6px",
+              opacity: 0.5,
+              letterSpacing: "1px",
+            }}
+          >
+            LANGUAGES
+          </div>
+          <div style={{ fontSize: "12px", lineHeight: 1.6 }}>
+            {profile.languages.join(" / ")}
+          </div>
+        </div>
+      </div>
+
       {/* Links as styled buttons */}
       <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+        <a
+          href={profile.social.website}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            flex: 1,
+            minWidth: "100px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "6px",
+            padding: "12px",
+            background: "rgba(255,170,0,0.04)",
+            border: "1px solid rgba(255,170,0,0.15)",
+            borderRadius: "8px",
+            color: "#ffaa00",
+            fontSize: "12px",
+            textDecoration: "none",
+            letterSpacing: "1px",
+          }}
+        >
+          WEBSITE
+        </a>
         <a
           href={profile.social.github}
           target="_blank"
           rel="noopener noreferrer"
           style={{
             flex: 1,
-            minWidth: "140px",
+            minWidth: "100px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -456,7 +546,7 @@ function AboutPanel() {
           rel="noopener noreferrer"
           style={{
             flex: 1,
-            minWidth: "140px",
+            minWidth: "100px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -477,7 +567,7 @@ function AboutPanel() {
           href={`mailto:${profile.social.email}`}
           style={{
             flex: 1,
-            minWidth: "140px",
+            minWidth: "100px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -548,6 +638,58 @@ function ContactPanel() {
             EMAIL
           </span>
           {profile.social.email}
+        </a>
+        <a
+          href={`tel:${profile.social.phone}`}
+          style={{
+            display: "block",
+            background: "rgba(255,255,255,0.03)",
+            border: "1px solid rgba(255,170,0,0.2)",
+            borderRadius: "8px",
+            padding: "16px",
+            color: "#ffaa00",
+            textDecoration: "none",
+            fontSize: "14px",
+          }}
+        >
+          <span
+            style={{
+              color: "#808090",
+              fontSize: "11px",
+              display: "block",
+              marginBottom: "4px",
+            }}
+          >
+            PHONE
+          </span>
+          {profile.social.phone}
+        </a>
+        <a
+          href={profile.social.website}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: "block",
+            background: "rgba(255,255,255,0.03)",
+            border: "1px solid rgba(255,170,0,0.2)",
+            borderRadius: "8px",
+            padding: "16px",
+            color: "#a78bfa",
+            textDecoration: "none",
+            fontSize: "14px",
+          }}
+        >
+          <span
+            style={{
+              color: "#808090",
+              fontSize: "11px",
+              display: "block",
+              marginBottom: "4px",
+            }}
+          >
+            WEBSITE
+          </span>
+          alwi.me
         </a>
         <a
           href={profile.social.github}
@@ -811,6 +953,16 @@ function ObservatoryPanel() {
   );
 }
 
+/* ── Terminal ── */
+function TerminalPanel() {
+  return <InteractiveTerminal />;
+}
+
+/* ── Achievements ── */
+function AchievementsPanel() {
+  return <AchievementGallery />;
+}
+
 /* ── Panels map ── */
 const PANELS: Record<PlatformId, () => React.JSX.Element> = {
   skills: SkillsPanel,
@@ -819,6 +971,8 @@ const PANELS: Record<PlatformId, () => React.JSX.Element> = {
   about: AboutPanel,
   contact: ContactPanel,
   observatory: ObservatoryPanel,
+  terminal: TerminalPanel,
+  achievements: AchievementsPanel,
 };
 
 /* ── Main overlay ── */

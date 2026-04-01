@@ -21,7 +21,7 @@ export const experience: readonly ExperienceEntry[] = [
     id: "wooskill",
     company: "Wooskill",
     role: "Software Engineer",
-    period: "Sep 2023 — Jan 2025",
+    period: "Oct 2023 — Dec 2024",
     description:
       "Led full-stack development across React frontend and PHP backend, including AWS environment setup and database migrations. Built an admin platform enabling non-technical teams to create and manage landing pages on the main website. Implemented multi-language support with Localize.js, refactored critical pages to cut load times by 20%, and optimized application architecture — improving conversion rates by 19% and boosting user retention by 15%.",
     color: "#a855f7",

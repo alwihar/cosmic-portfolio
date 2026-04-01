@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { toggleMusic, isMusicPlaying } from "../../audio/audioManager.ts";
+import { setSfxEnabled } from "../../audio/sfxManager.ts";
 
 export function AudioToggle() {
   const [playing, setPlaying] = useState(isMusicPlaying);
@@ -7,6 +8,7 @@ export function AudioToggle() {
   const handleToggle = useCallback(() => {
     const nowPlaying = toggleMusic();
     setPlaying(nowPlaying);
+    setSfxEnabled(nowPlaying);
   }, []);
 
   return (
@@ -29,7 +31,7 @@ export function AudioToggle() {
         transition: "all 0.3s",
       }}
     >
-      {playing ? "MUSIC ON" : "MUSIC OFF"}
+      {playing ? "SOUND ON" : "SOUND OFF"}
     </button>
   );
 }

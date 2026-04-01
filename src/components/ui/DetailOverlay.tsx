@@ -130,7 +130,190 @@ function SkillsPanel() {
 }
 
 /* ── Projects ── */
+function ProjectCard({
+  project,
+}: {
+  readonly project: (typeof projects)[number];
+}) {
+  return (
+    <div
+      style={{
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.06)",
+        borderRadius: "8px",
+        padding: "20px",
+      }}
+    >
+      <h3
+        style={{
+          color: "#00f0ff",
+          margin: "0 0 8px 0",
+          fontSize: "16px",
+        }}
+      >
+        {project.title}
+      </h3>
+      <p
+        style={{
+          margin: "0 0 12px 0",
+          fontSize: "13px",
+          lineHeight: 1.6,
+          opacity: 0.8,
+        }}
+      >
+        {project.description}
+      </p>
+      <div
+        style={{
+          display: "flex",
+          gap: "6px",
+          flexWrap: "wrap",
+          marginBottom: "12px",
+        }}
+      >
+        {project.techStack.map((tech) => (
+          <span
+            key={tech}
+            style={{
+              padding: "3px 8px",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: "4px",
+              fontSize: "11px",
+              color: "#a0a0c0",
+            }}
+          >
+            {tech}
+          </span>
+        ))}
+      </div>
+      <div style={{ display: "flex", gap: "12px" }}>
+        {project.liveUrl && (
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "#00f0ff",
+              fontSize: "12px",
+              textDecoration: "none",
+            }}
+          >
+            [LIVE]
+          </a>
+        )}
+        {project.githubUrl && (
+          <a
+            href={project.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "#00ff88",
+              fontSize: "12px",
+              textDecoration: "none",
+            }}
+          >
+            [CODE]
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SideProjectCard({
+  project,
+}: {
+  readonly project: (typeof projects)[number];
+}) {
+  return (
+    <div
+      style={{
+        background: "rgba(168,85,247,0.04)",
+        border: "1px solid rgba(168,85,247,0.15)",
+        borderRadius: "8px",
+        padding: "14px",
+      }}
+    >
+      <h4
+        style={{
+          color: "#a855f7",
+          margin: "0 0 4px 0",
+          fontSize: "13px",
+        }}
+      >
+        {project.title}
+      </h4>
+      <p
+        style={{
+          margin: "0 0 8px 0",
+          fontSize: "11px",
+          lineHeight: 1.5,
+          opacity: 0.6,
+        }}
+      >
+        {project.description}
+      </p>
+      <div
+        style={{
+          display: "flex",
+          gap: "4px",
+          flexWrap: "wrap",
+          marginBottom: "8px",
+        }}
+      >
+        {project.techStack.slice(0, 3).map((tech) => (
+          <span
+            key={tech}
+            style={{
+              padding: "2px 6px",
+              border: "1px solid rgba(168,85,247,0.15)",
+              borderRadius: "3px",
+              fontSize: "10px",
+              color: "#8080a0",
+            }}
+          >
+            {tech}
+          </span>
+        ))}
+      </div>
+      <div style={{ display: "flex", gap: "10px" }}>
+        {project.liveUrl && (
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "#a855f7",
+              fontSize: "11px",
+              textDecoration: "none",
+            }}
+          >
+            [LIVE]
+          </a>
+        )}
+        {project.githubUrl && (
+          <a
+            href={project.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "#00ff88",
+              fontSize: "11px",
+              textDecoration: "none",
+            }}
+          >
+            [CODE]
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function ProjectsPanel() {
+  const majorProjects = projects.filter((p) => p.type === "major");
+  const sideProjects = projects.filter((p) => p.type === "side");
+
   return (
     <div>
       <h2
@@ -143,91 +326,44 @@ function ProjectsPanel() {
       >
         PROJECTS
       </h2>
+
+      {/* Major projects — full cards */}
       <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-        {projects.map((project) => (
-          <div
-            key={project.id}
-            style={{
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.06)",
-              borderRadius: "8px",
-              padding: "20px",
-            }}
-          >
-            <h3
-              style={{
-                color: "#00f0ff",
-                margin: "0 0 8px 0",
-                fontSize: "16px",
-              }}
-            >
-              {project.title}
-            </h3>
-            <p
-              style={{
-                margin: "0 0 12px 0",
-                fontSize: "13px",
-                lineHeight: 1.6,
-                opacity: 0.8,
-              }}
-            >
-              {project.description}
-            </p>
-            <div
-              style={{
-                display: "flex",
-                gap: "6px",
-                flexWrap: "wrap",
-                marginBottom: "12px",
-              }}
-            >
-              {project.techStack.map((tech) => (
-                <span
-                  key={tech}
-                  style={{
-                    padding: "3px 8px",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "4px",
-                    fontSize: "11px",
-                    color: "#a0a0c0",
-                  }}
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-            <div style={{ display: "flex", gap: "12px" }}>
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    color: "#00f0ff",
-                    fontSize: "12px",
-                    textDecoration: "none",
-                  }}
-                >
-                  [LIVE]
-                </a>
-              )}
-              {project.githubUrl && (
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    color: "#00ff88",
-                    fontSize: "12px",
-                    textDecoration: "none",
-                  }}
-                >
-                  [CODE]
-                </a>
-              )}
-            </div>
-          </div>
+        {majorProjects.map((project) => (
+          <ProjectCard key={project.id} project={project} />
         ))}
+      </div>
+
+      {/* Side projects — smaller grid with purple accent */}
+      <div
+        style={{
+          marginTop: "28px",
+          paddingTop: "20px",
+          borderTop: "1px solid rgba(168,85,247,0.12)",
+        }}
+      >
+        <h3
+          style={{
+            color: "#a855f7",
+            margin: "0 0 16px 0",
+            fontSize: "14px",
+            letterSpacing: "2px",
+            opacity: 0.7,
+          }}
+        >
+          SIDE PROJECTS & WEBSITES
+        </h3>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+            gap: "12px",
+          }}
+        >
+          {sideProjects.map((project) => (
+            <SideProjectCard key={project.id} project={project} />
+          ))}
+        </div>
       </div>
     </div>
   );

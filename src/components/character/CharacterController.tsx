@@ -50,7 +50,7 @@ export function CharacterController({
   const { state: internalState, setDashing } = useCharacterState(charGroupRef);
 
   // Sync internal state to the external ref every frame
-  useFrame(() => {
+  useFrame((_, delta) => {
     if (movementStateRef) {
       movementStateRef.current = internalState.current;
     }

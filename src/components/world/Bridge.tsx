@@ -7,10 +7,7 @@ import {
   energyBridgeFragment,
 } from "../../shaders/energyBridge";
 
-const WALL_HEIGHT = 3;
-const WALL_THICKNESS = 0.5;
 const SURFACE_Y_OFFSET = 0.175;
-const WALL_MARGIN = -0.5;
 /** Extra length added to bridge collider on each end to prevent fall-through gaps */
 const COLLIDER_OVERLAP = 2.0;
 /** Reduce visual trim so bridge surface extends slightly into the platform */
@@ -177,8 +174,6 @@ export function Bridge({
     rotation,
     length,
     colliderLength,
-    wallLength,
-    wallOffsetZ,
     visualLength,
     visualOffsetZ,
   } = useMemo(() => {
@@ -202,12 +197,6 @@ export function Bridge({
     );
     const vOffset = (edgeFrom - edgeTo) / 2;
 
-    // Wall trimming (extra margin so walls don't block platform movement)
-    const trimFrom = edgeFrom + WALL_MARGIN;
-    const trimTo = edgeTo + WALL_MARGIN;
-    const wLen = Math.max(0, bridgeLength - trimFrom - trimTo);
-    const wOffset = (trimFrom - trimTo) / 2;
-
     // Floor collider extends beyond center-to-center span to overlap
     // with platform colliders, preventing fall-through at seams
     const colliderLen = bridgeLength + COLLIDER_OVERLAP * 2;
@@ -217,8 +206,6 @@ export function Bridge({
       rotation: [0, angle, 0] as const,
       length: bridgeLength,
       colliderLength: colliderLen,
-      wallLength: wLen,
-      wallOffsetZ: wOffset,
       visualLength: vLen,
       visualOffsetZ: vOffset,
     };
@@ -282,40 +269,6 @@ export function Bridge({
 
       {/* Floor collider extends past platform edges to prevent fall-through */}
       <CuboidCollider args={[width / 2, 0.075, colliderLength / 2]} />
-
-      {/* Side wall colliders */}
-      {wallLength > 0 && (
-        <>
-          <CuboidCollider
-            position={[-width / 2, WALL_HEIGHT / 2, wallOffsetZ]}
-            args={[WALL_THICKNESS / 2, WALL_HEIGHT / 2, wallLength / 2]}
-          />
-          <CuboidCollider
-            position={[width / 2, WALL_HEIGHT / 2, wallOffsetZ]}
-            args={[WALL_THICKNESS / 2, WALL_HEIGHT / 2, wallLength / 2]}
-          />
-        </>
-      )}
-
-      {/* Corner blockers at each bridge-platform junction.
-          These are wider colliders at each end to seal the diagonal gaps
-          between the rotated bridge walls and axis-aligned platform walls. */}
-      <CuboidCollider
-        position={[-width / 2, WALL_HEIGHT / 2, -length / 2]}
-        args={[WALL_THICKNESS, WALL_HEIGHT / 2, WALL_THICKNESS]}
-      />
-      <CuboidCollider
-        position={[width / 2, WALL_HEIGHT / 2, -length / 2]}
-        args={[WALL_THICKNESS, WALL_HEIGHT / 2, WALL_THICKNESS]}
-      />
-      <CuboidCollider
-        position={[-width / 2, WALL_HEIGHT / 2, length / 2]}
-        args={[WALL_THICKNESS, WALL_HEIGHT / 2, WALL_THICKNESS]}
-      />
-      <CuboidCollider
-        position={[width / 2, WALL_HEIGHT / 2, length / 2]}
-        args={[WALL_THICKNESS, WALL_HEIGHT / 2, WALL_THICKNESS]}
-      />
     </RigidBody>
   );
 }

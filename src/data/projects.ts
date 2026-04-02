@@ -13,19 +13,21 @@ export const projects: readonly Project[] = [
   // ── Major Projects (from CV / professional work) ──
   {
     id: "sdt-dashboard",
-    title: "Property Management Dashboard",
+    title: "Main10 — Property Management",
     description:
-      "Real-time dashboard for property managers, contractors, and engineers — featuring interactive maps, camera feeds, complex data tables, and automated AWS infrastructure with Pulumi.",
-    techStack: ["React", "React Native", "TypeScript", "AWS", "Pulumi"],
+      "Real-time dashboard for property managers, contractors, and engineers — featuring interactive maps (Mapbox, Google Maps), camera feeds, complex data tables, and automated AWS infrastructure with Pulumi across 3 deployment stacks.",
+    techStack: ["React", "TypeScript", "AWS", "Pulumi", "Mapbox"],
+    liveUrl: "https://app.main-10.com/",
     imageUrl: "/images/project-dashboard.png",
     type: "major",
   },
   {
-    id: "wooskill-builder",
-    title: "Landing Page Builder",
+    id: "wooskill",
+    title: "Wooskill — Skills Sharing Platform",
     description:
-      "Admin platform empowering non-technical teams to create and manage custom landing pages on the main website, with drag-and-drop layouts and multi-language support.",
+      "Educational marketplace connecting learners with expert instructors for live sessions. Built front-end features, custom landing page builder, multi-language support with Localize.js, and refactored pages for 25% better user satisfaction.",
     techStack: ["React", "PHP", "MySQL", "AWS", "Localize.js"],
+    liveUrl: "https://wooskill.com",
     imageUrl: "/images/project-admin.png",
     type: "major",
   },
@@ -35,7 +37,7 @@ export const projects: readonly Project[] = [
     description:
       "White-label loyalty mobile application delivered to 13 global clients, featuring NFT integrations, Binance payment gateways, and a seamless end-user rewards experience.",
     techStack: ["React", "Redux", "Rx.js", "Solidity", "Web3"],
-    githubUrl: "https://github.com/alwihar/qiibee",
+    liveUrl: "https://rewards.qiibee.com/",
     imageUrl: "/images/project-whitelabel.png",
     type: "major",
   },
@@ -45,7 +47,7 @@ export const projects: readonly Project[] = [
     description:
       "Comprehensive admin dashboard for managing loyalty programs across 13 global clients — with a reusable component library, analytics, and campaign management tools.",
     techStack: ["React", "TypeScript", "MUI", "Redux", "Rx.js"],
-    githubUrl: "https://github.com/alwihar/qiibee",
+    liveUrl: "https://dashboard.qiibee.com/",
     imageUrl: "/images/project-dashboard-loyalty.png",
     type: "major",
   },
@@ -84,37 +86,6 @@ export const projects: readonly Project[] = [
     type: "side",
   },
   {
-    id: "audio-interleave",
-    title: "Audio Text Interleave",
-    description:
-      "React Native app that syncs audio playback with bilingual transcripts — tap phrases to jump, highlight in real-time. Built for language learning.",
-    techStack: ["React Native", "TypeScript"],
-    liveUrl: "https://audio-text-interleave-app.vercel.app",
-    githubUrl: "https://github.com/alwihar/AudioTextInterleaveApp",
-    imageUrl: "/images/project-audio.png",
-    type: "side",
-  },
-  {
-    id: "banking-app",
-    title: "Banking App",
-    description:
-      "Modern banking interface with account management, transactions, and financial dashboards.",
-    techStack: ["TypeScript", "React", "CSS"],
-    githubUrl: "https://github.com/alwihar/banking_app",
-    imageUrl: "/images/project-banking.png",
-    type: "side",
-  },
-  {
-    id: "colony-dapp",
-    title: "Colony dApp",
-    description:
-      "Decentralized application demo featuring React, GraphQL, Docker, Redux Saga, and Ganache for Ethereum blockchain simulation.",
-    techStack: ["TypeScript", "React", "GraphQL", "Docker"],
-    githubUrl: "https://github.com/alwihar/Colony",
-    imageUrl: "/images/project-colony.png",
-    type: "side",
-  },
-  {
     id: "old-portfolio",
     title: "Portfolio v1",
     description:
@@ -122,16 +93,6 @@ export const projects: readonly Project[] = [
     techStack: ["JavaScript", "SCSS", "HTML"],
     githubUrl: "https://github.com/alwihar/portfolio",
     imageUrl: "/images/project-old-portfolio.png",
-    type: "side",
-  },
-  {
-    id: "job-search",
-    title: "Job Search App",
-    description:
-      "React Native mobile app using a job search API to show popular and nearby listings with keyword search.",
-    techStack: ["React Native", "JavaScript"],
-    githubUrl: "https://github.com/alwihar/JobSearch",
-    imageUrl: "/images/project-jobsearch.png",
     type: "side",
   },
 ];

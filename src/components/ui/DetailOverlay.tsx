@@ -130,6 +130,98 @@ function SkillsPanel() {
 }
 
 /* ── Projects ── */
+function ImageCarousel({ images }: { readonly images: readonly string[] }) {
+  const [idx, setIdx] = useState(0);
+
+  return (
+    <div style={{ position: "relative", marginBottom: "12px" }}>
+      <img
+        src={images[idx]}
+        alt={`Screenshot ${idx + 1}`}
+        style={{
+          width: "100%",
+          borderRadius: "6px",
+          border: "1px solid rgba(255,255,255,0.08)",
+          display: "block",
+        }}
+      />
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={() => setIdx((idx - 1 + images.length) % images.length)}
+            style={{
+              position: "absolute",
+              left: "6px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              background: "rgba(0,0,0,0.6)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              borderRadius: "50%",
+              width: "28px",
+              height: "28px",
+              color: "#fff",
+              cursor: "pointer",
+              fontSize: "14px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            ‹
+          </button>
+          <button
+            onClick={() => setIdx((idx + 1) % images.length)}
+            style={{
+              position: "absolute",
+              right: "6px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              background: "rgba(0,0,0,0.6)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              borderRadius: "50%",
+              width: "28px",
+              height: "28px",
+              color: "#fff",
+              cursor: "pointer",
+              fontSize: "14px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            ›
+          </button>
+          <div
+            style={{
+              position: "absolute",
+              bottom: "8px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              display: "flex",
+              gap: "4px",
+            }}
+          >
+            {images.map((_, i) => (
+              <div
+                key={i}
+                onClick={() => setIdx(i)}
+                style={{
+                  width: "6px",
+                  height: "6px",
+                  borderRadius: "50%",
+                  background: i === idx ? "#00f0ff" : "rgba(255,255,255,0.3)",
+                  cursor: "pointer",
+                  transition: "background 0.2s",
+                }}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function ProjectCard({
   project,
 }: {
@@ -144,6 +236,9 @@ function ProjectCard({
         padding: "20px",
       }}
     >
+      {project.images && project.images.length > 0 && (
+        <ImageCarousel images={project.images} />
+      )}
       <h3
         style={{
           color: "#00f0ff",

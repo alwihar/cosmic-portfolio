@@ -6,6 +6,7 @@ export interface Project {
   readonly liveUrl?: string;
   readonly githubUrl?: string;
   readonly imageUrl: string;
+  readonly images?: readonly string[];
   readonly type: "major" | "side";
 }
 
@@ -18,7 +19,25 @@ export const projects: readonly Project[] = [
       "Real-time dashboard for property managers, contractors, and engineers — featuring interactive maps (Mapbox, Google Maps), camera feeds, complex data tables, and automated AWS infrastructure with Pulumi across 3 deployment stacks.",
     techStack: ["React", "TypeScript", "AWS", "Pulumi", "Mapbox"],
     liveUrl: "https://app.main-10.com/",
-    imageUrl: "/images/project-dashboard.png",
+    imageUrl: "/images/main10/overview.png",
+    images: [
+      "/images/main10/overview.png",
+      "/images/main10/compliance.png",
+      "/images/main10/issues.png",
+      "/images/main10/inquiries.png",
+      "/images/main10/blocks.png",
+      "/images/main10/time-tracking.png",
+      "/images/main10/account.png",
+    ],
+    type: "major",
+  },
+  {
+    id: "sdt-infrastructure",
+    title: "SDT Infrastructure (Pulumi)",
+    description:
+      "AWS infrastructure-as-code for a multi-product SaaS — managing S3, CloudFront, Lambda, Elastic Beanstalk, ECR, ACM, Route53, and MediaConvert across dev/prod. Config-driven with per-environment YAML, cross-stack references, and CI/CD with auto-discovery preview and deploy-on-merge via GitHub Actions.",
+    techStack: ["Pulumi", "TypeScript", "AWS", "GitHub Actions"],
+    imageUrl: "/images/main10/overview.png",
     type: "major",
   },
   {
@@ -28,7 +47,42 @@ export const projects: readonly Project[] = [
       "Educational marketplace connecting learners with expert instructors for live sessions. Built front-end features, custom landing page builder, multi-language support with Localize.js, and refactored pages for 25% better user satisfaction.",
     techStack: ["React", "PHP", "MySQL", "AWS", "Localize.js"],
     liveUrl: "https://wooskill.com",
-    imageUrl: "/images/project-admin.png",
+    imageUrl: "/images/wooskill/1-listings.png",
+    images: [
+      "/images/wooskill/1-listings.png",
+      "/images/wooskill/2-homepage.png",
+      "/images/wooskill/3-profile.png",
+      "/images/wooskill/4-recommendation.png",
+      "/images/wooskill/5-filters.png",
+      "/images/wooskill/6-offer-creation.png",
+      "/images/wooskill/7-availability.png",
+      "/images/wooskill/8-pricing.png",
+      "/images/wooskill/9-subscription.png",
+    ],
+    type: "major",
+  },
+  {
+    id: "censtays",
+    title: "CenStays — Luxury Lettings",
+    description:
+      "Luxury lettings website for a London-based real estate company. Features property listings from a live API, interactive map view, auth flow, enquiry forms, saved properties, and responsive dark/light mode. Deployed to AWS S3/CloudFront via CI/CD. Work in progress.",
+    liveUrl: "https://censtays.com",
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "AWS"],
+    imageUrl: "/images/censtays/1-home.png",
+    images: [
+      "/images/censtays/1-home.png",
+      "/images/censtays/2-lettings.png",
+      "/images/censtays/3-contact.png",
+    ],
+    type: "major",
+  },
+  {
+    id: "property-hub",
+    title: "Main10 Property Hub (npm)",
+    description:
+      "Shared React component library and API client published as an npm package. Provides reusable, themeable UI components, authentication flow, favorites system, and a data adapter layer. Built with TypeScript, tsup, BEM CSS with custom properties, and Storybook.",
+    techStack: ["React", "TypeScript", "Storybook", "tsup"],
+    imageUrl: "/images/project-propertyhub.png",
     type: "major",
   },
   {
@@ -38,7 +92,13 @@ export const projects: readonly Project[] = [
       "White-label loyalty mobile application delivered to 13 global clients, featuring NFT integrations, Binance payment gateways, and a seamless end-user rewards experience.",
     techStack: ["React", "Redux", "Rx.js", "Solidity", "Web3"],
     liveUrl: "https://rewards.qiibee.com/",
-    imageUrl: "/images/project-whitelabel.png",
+    imageUrl: "/images/whitelabel/1.png",
+    images: [
+      "/images/whitelabel/1.png",
+      "/images/whitelabel/2.png",
+      "/images/whitelabel/3.png",
+      "/images/whitelabel/4.png",
+    ],
     type: "major",
   },
   {
@@ -48,7 +108,13 @@ export const projects: readonly Project[] = [
       "Comprehensive admin dashboard for managing loyalty programs across 13 global clients — with a reusable component library, analytics, and campaign management tools.",
     techStack: ["React", "TypeScript", "MUI", "Redux", "Rx.js"],
     liveUrl: "https://dashboard.qiibee.com/",
-    imageUrl: "/images/project-dashboard-loyalty.png",
+    imageUrl: "/images/dashboard-loyalty/4.png",
+    images: [
+      "/images/dashboard-loyalty/4.png",
+      "/images/dashboard-loyalty/3.png",
+      "/images/dashboard-loyalty/2.png",
+      "/images/dashboard-loyalty/1.png",
+    ],
     type: "major",
   },
   {
@@ -60,6 +126,23 @@ export const projects: readonly Project[] = [
     liveUrl: "https://alwi.me",
     githubUrl: "https://github.com/alwihar/cosmic-portfolio",
     imageUrl: "/images/project-portfolio.png",
+    type: "side",
+  },
+
+  {
+    id: "thebitcoinlore",
+    title: "The Bitcoin Lore",
+    description:
+      "An interactive visual journey through Bitcoin's history — from the genesis block to modern adoption. Built as a storytelling experience with smooth animations and responsive design. Work in progress.",
+    techStack: ["React", "TypeScript", "Vite"],
+    liveUrl: "https://thebitcoinlore.com",
+    githubUrl: "https://github.com/alwihar/thebitcoinlore",
+    imageUrl: "/images/bitcoinlore/1-hero.png",
+    images: [
+      "/images/bitcoinlore/1-hero.png",
+      "/images/bitcoinlore/2-diagnostic.png",
+      "/images/bitcoinlore/3-pricing.png",
+    ],
     type: "major",
   },
 
@@ -92,7 +175,13 @@ export const projects: readonly Project[] = [
       "Original portfolio website showcasing the journey as a Frontend Developer and Artist, with SCSS animations.",
     techStack: ["JavaScript", "SCSS", "HTML"],
     githubUrl: "https://github.com/alwihar/portfolio",
-    imageUrl: "/images/project-old-portfolio.png",
+    imageUrl: "/images/old-portfolio/1.png",
+    images: [
+      "/images/old-portfolio/1.png",
+      "/images/old-portfolio/4.png",
+      "/images/old-portfolio/3.png",
+      "/images/old-portfolio/2.png",
+    ],
     type: "side",
   },
 ];
